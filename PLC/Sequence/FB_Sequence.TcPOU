@@ -48,8 +48,6 @@ END_VAR
     </Method>
     <Method Name="Init" Id="{3785b1b1-2147-4d2b-a229-b1142ce72fd9}">
       <Declaration><![CDATA[METHOD PUBLIC Init : BOOL
-VAR_INPUT
-END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF InInit THEN
@@ -166,8 +164,6 @@ END_IF]]></ST>
     </Method>
     <Method Name="Start" Id="{bc076645-3de2-476f-9d12-986e34f26bd8}">
       <Declaration><![CDATA[METHOD PRIVATE Start : BOOL
-VAR_INPUT
-END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF InStart AND NOT m_FlStart AND m_SequenceState<>SequenceStateActive THEN
