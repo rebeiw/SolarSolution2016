@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.0.36">
+  <DUT Name="EN_SequenceStartNames" Id="{822054e7-65a4-4fd5-9889-5b4e32623f94}">
+    <Declaration><![CDATA[TYPE EN_SequenceStartNames :
+(
+	SequenceStartNamesStart:=10
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -10,6 +10,8 @@ VAR_OUTPUT
 END_VAR
 VAR
 	m_FlStart:BOOL;
+	m_SequenceNumber:INT;
+	m_SequenceNumberOld:INT;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -31,7 +33,13 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[IF InStart AND NOT m_FlStart THEN
+	m_FlStart:=TRUE;
+	m_SequenceNumber:=SequenceStartNamesStart;
+END_IF
+IF NOT InStart AND m_FlStart THEN
+	m_FlStart:=FALSE;
+END_IF]]></ST>
       </Implementation>
     </Method>
   </POU>

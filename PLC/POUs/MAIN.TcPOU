@@ -8,7 +8,8 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[m_Fbi_Soldering();]]></ST>
+      <ST><![CDATA[m_Fbi_Soldering.InStart:=SolderingStart;	
+m_fbi_Soldering();]]></ST>
     </Implementation>
   </POU>
 </TcPlcObject>
