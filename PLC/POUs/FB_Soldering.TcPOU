@@ -24,6 +24,12 @@ CASE m_SequenceNumber OF
 		IF m_Delay.Q THEN
 			SetSequence(SolderingSequenceStep12);
 		END_IF
+	SolderingSequenceStep12:
+		StartDelaySetTime(T#10S);
+		IF m_Delay.Q THEN
+			
+			SetSequence(SolderingSequenceStep12);
+		END_IF
 	
 END_CASE
 ]]></ST>
