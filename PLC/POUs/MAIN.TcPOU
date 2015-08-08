@@ -4,10 +4,11 @@
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
 	i :INT;
+	m_Fbi_Soldering:FB_Soldering;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[]]></ST>
+      <ST><![CDATA[m_Fbi_Soldering();]]></ST>
     </Implementation>
   </POU>
 </TcPlcObject>
