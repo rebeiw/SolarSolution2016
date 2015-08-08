@@ -8,6 +8,7 @@ VAR_INPUT
 	InInit						:BOOL;
 	InStart						:BOOL;
 	InStop						:BOOL;
+	InCont						:BOOL;
 END_VAR
 VAR_OUTPUT
 	OutSequenceActive			:BOOL;
@@ -28,6 +29,7 @@ VAR
 	m_SequenceLast			:INT;
 
 	m_FlStop				:BOOL;
+	m_FlCont				:BOOL;
 	
 	m_SequenceState			:INT;
 END_VAR
@@ -70,6 +72,7 @@ END_IF
         <ST><![CDATA[Init();
 Start();
 Stop();
+Cont();
 
 IF m_SequenceNumberOld<>m_SequenceNumber THEN
 	m_SequenceNumberOld		:=m_SequenceNumber;
@@ -106,12 +109,30 @@ END_IF
 OutSequenceState			:=m_SequenceState;]]></ST>
       </Implementation>
     </Method>
+    <Method Name="Cont" Id="{6a796170-fd80-4466-b980-8d7ff314fb16}">
+      <Declaration><![CDATA[METHOD PUBLIC Cont : BOOL
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF InCont AND NOT m_FlCont AND m_SequenceState=SequenceStateStop THEN
+	m_FlCont				:=TRUE;
+	m_SequenceState			:=SequenceStateActive;
+END_IF
+
+IF NOT Incont AND m_FlCont THEN
+	m_FlCont				:=FALSE;
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="IncSequence" Id="{8ed6c8f7-9634-42ac-a8e9-da5f2719f86b}">
       <Declaration><![CDATA[METHOD PUBLIC IncSequence : BOOL
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[m_SequenceLast:=m_SequenceNumber;
-m_SequenceNumber:=m_SequenceNumber + 1;
+        <ST><![CDATA[IF m_SequenceState<>SequenceStateStop THEN
+	m_SequenceLast:=m_SequenceNumber;
+	m_SequenceNumber:=m_SequenceNumber + 1;
+END_IF
 ]]></ST>
       </Implementation>
     </Method>
@@ -121,6 +142,7 @@ m_SequenceNumber:=m_SequenceNumber + 1;
       <Implementation>
         <ST><![CDATA[IF InStop AND NOT m_FlStop AND m_SequenceState=SequenceStateActive THEN
 	m_FlStop				:=TRUE;
+	m_SequenceState			:=SequenceStateStop;
 END_IF
 
 IF NOT InStop AND m_FlStop THEN
@@ -136,9 +158,10 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[m_SequenceLast:=m_SequenceNumber;
-m_SequenceNumber:=InSequence;
-]]></ST>
+        <ST><![CDATA[IF m_SequenceState<>SequenceStateStop THEN
+	m_SequenceLast:=m_SequenceNumber;
+	m_SequenceNumber:=InSequence;
+END_IF]]></ST>
       </Implementation>
     </Method>
     <Method Name="Start" Id="{bc076645-3de2-476f-9d12-986e34f26bd8}">

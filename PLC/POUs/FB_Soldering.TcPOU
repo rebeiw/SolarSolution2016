@@ -13,18 +13,31 @@ END_VAR
       <ST><![CDATA[SUPER^.Main();
 CASE m_SequenceNumber OF
 	SequenceStartNamesStart:
-		StartDelaySetTime(T#5S);
+		StartDelaySetTime(T#1S);
 		IF m_Delay.Q THEN
 			SetSequence(SolderingSequenceStep11);
 		END_IF
 		
 	SolderingSequenceStep11:
-		StartDelaySetTime(T#5S);
+		StartDelaySetTime(T#1S);
 		IF m_Delay.Q THEN
 			SetSequence(SolderingSequenceStep12);
 		END_IF
+
 	SolderingSequenceStep12:
-		StartDelaySetTime(T#5S);
+		StartDelaySetTime(T#1S);
+		IF m_Delay.Q THEN
+			SetSequence(SolderingSequenceStep13);
+		END_IF
+
+	SolderingSequenceStep13:
+		StartDelaySetTime(T#1S);
+		IF m_Delay.Q THEN
+			SetSequence(SolderingSequenceStep14);
+		END_IF
+
+	SolderingSequenceStep14:
+		StartDelaySetTime(T#1S);
 		IF m_Delay.Q THEN
 			Done();
 		END_IF

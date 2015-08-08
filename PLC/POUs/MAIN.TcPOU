@@ -16,14 +16,19 @@ m_Fbi_OffLoad.InInit			:=SolderingStart OR FirstCycle;
 m_Fbi_OffLoad2.InInit			:=SolderingStart OR FirstCycle;
 
 
-m_fbi_Soldering	(InStart		:=SolderingStart);
-m_Fbi_OffLoad	(InStart		:=m_fbi_Soldering.OutSequenceDone);
-m_Fbi_OffLoad2	(InStart		:=m_Fbi_OffLoad.OutSequenceDone);
+m_fbi_Soldering	(	InStart		:=SolderingStart,
+					Instop		:=SolderingStop,
+					InCont		:=SolderingCont);
+m_Fbi_OffLoad	(	InStart		:=m_fbi_Soldering.OutSequenceDone);
+m_Fbi_OffLoad2	(	InStart		:=m_Fbi_OffLoad.OutSequenceDone);
 
 
 
-FirstCycle:=FALSE;
-SolderingStart:=FALSE;
+FirstCycle						:=FALSE;
+SolderingStart					:=FALSE;
+SolderingStop					:=FALSE;
+SolderingCont					:=FALSE;
+
 ]]></ST>
     </Implementation>
   </POU>
