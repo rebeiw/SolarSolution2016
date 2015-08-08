@@ -63,9 +63,7 @@ END_IF
       </Implementation>
     </Method>
     <Method Name="Main" Id="{562a737a-3059-4135-9ef3-716b7ab20daf}">
-      <Declaration><![CDATA[METHOD PROTECTED Main : BOOL
-
-]]></Declaration>
+      <Declaration><![CDATA[METHOD PROTECTED Main : BOOL]]></Declaration>
       <Implementation>
         <ST><![CDATA[Init();
 Start();
