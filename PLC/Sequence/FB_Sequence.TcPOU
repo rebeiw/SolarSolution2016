@@ -3,10 +3,14 @@
   <POU Name="FB_Sequence" Id="{fb4892fb-69c3-469d-b6eb-dfd06ca281dc}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_Sequence
 VAR_INPUT
-	InStart					:BOOL;
+	InInit						:BOOL;
+	InStart						:BOOL;
 END_VAR
 VAR_OUTPUT
-	OutSequnceState			:EN_SequenceState;
+	OutSequenceActive			:BOOL;
+	OutSequenceWaiting			:BOOL;
+	OutSequenceInit				:BOOL;
+	OutSequenceState			:EN_SequenceState;
 END_VAR
 VAR
 	m_DelayStart			:BOOL;
@@ -15,6 +19,9 @@ VAR
 	m_FlStart				:BOOL;
 	m_SequenceNumber		:INT;
 	m_SequenceNumberOld		:INT;
+	m_SequenceLast			:INT;
+	
+	m_SequenceState			:EN_SequenceState;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -29,10 +36,23 @@ END_VAR
 ]]></ST>
       </Implementation>
     </Method>
-    <Method Name="Main" Id="{562a737a-3059-4135-9ef3-716b7ab20daf}">
-      <Declaration><![CDATA[METHOD PROTECTED Main : BOOL
+    <Method Name="Init" Id="{3785b1b1-2147-4d2b-a229-b1142ce72fd9}">
+      <Declaration><![CDATA[METHOD PUBLIC Init : BOOL
 VAR_INPUT
 END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF InInit THEN
+	m_SequenceNumber		:=SequenceStartNamesInit;
+	m_DelayStart			:=FALSE;
+	m_SequenceState			:=SequenceStateInit;
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Main" Id="{562a737a-3059-4135-9ef3-716b7ab20daf}">
+      <Declaration><![CDATA[METHOD PROTECTED Main : BOOL
+
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[Start();
@@ -43,14 +63,31 @@ END_IF
 m_Delay.PT					:=m_DelayTime;
 m_Delay.IN					:=m_DelayStart;
 m_Delay();
-]]></ST>
+
+
+IF 		m_SequenceState=SequenceStartNamesWait THEN
+	m_SequenceState			:=SequenceStartNamesWait;
+	OutSequenceActive		:=FALSE;
+	OutSequenceInit			:=FALSE;
+	OutSequenceWaiting		:=TRUE;
+	
+ELSIF 	m_SequenceState=SequenceStateInit THEN
+	m_SequenceState			:=SequenceStartNamesInit;
+	OutSequenceActive		:=FALSE;
+	OutSequenceInit			:=TRUE;
+	OutSequenceWaiting		:=FALSE;
+	
+END_IF
+
+OutSequenceState			:=m_SequenceState;]]></ST>
       </Implementation>
     </Method>
     <Method Name="IncSequence" Id="{8ed6c8f7-9634-42ac-a8e9-da5f2719f86b}">
       <Declaration><![CDATA[METHOD PUBLIC IncSequence : BOOL
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[m_SequenceNumber:=m_SequenceNumber + 1;
+        <ST><![CDATA[m_SequenceLast:=m_SequenceNumber;
+m_SequenceNumber:=m_SequenceNumber + 1;
 ]]></ST>
       </Implementation>
     </Method>
@@ -61,7 +98,8 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[m_SequenceNumber:=InSequence;
+        <ST><![CDATA[m_SequenceLast:=m_SequenceNumber;
+m_SequenceNumber:=InSequence;
 ]]></ST>
       </Implementation>
     </Method>
@@ -75,6 +113,7 @@ END_VAR
 	m_FlStart				:=TRUE;
 	m_SequenceNumber		:=SequenceStartNamesStart;
 	m_DelayStart			:=FALSE;
+	m_SequenceState			:=SequenceStateActive;
 END_IF
 IF NOT InStart AND m_FlStart THEN
 	m_FlStart				:=FALSE;

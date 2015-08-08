@@ -3,7 +3,9 @@
   <DUT Name="EN_SequenceStartNames" Id="{822054e7-65a4-4fd5-9889-5b4e32623f94}">
     <Declaration><![CDATA[TYPE EN_SequenceStartNames :
 (
-	SequenceStartNamesStart:=10
+	SequenceStartNamesStart:=10,
+	SequenceStartNamesWait:=100,
+	SequenceStartNamesInit:=200
 );
 END_TYPE
 ]]></Declaration>

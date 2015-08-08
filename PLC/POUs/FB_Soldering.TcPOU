@@ -11,7 +11,6 @@ END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[SUPER^.Main();
-
 CASE m_SequenceNumber OF
 	SequenceStartNamesStart:
 		StartDelaySetTime(T#5S);
@@ -27,8 +26,7 @@ CASE m_SequenceNumber OF
 	SolderingSequenceStep12:
 		StartDelaySetTime(T#10S);
 		IF m_Delay.Q THEN
-			
-			SetSequence(SolderingSequenceStep12);
+			SetSequence(SequenceStartNamesWait);
 		END_IF
 	
 END_CASE
