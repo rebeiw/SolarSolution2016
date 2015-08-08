@@ -3,6 +3,7 @@
 *.suo
 *.tmc
 *.tpy
+*.tclrs
 _Boot/
 _Config/
 _CompileInfo/
