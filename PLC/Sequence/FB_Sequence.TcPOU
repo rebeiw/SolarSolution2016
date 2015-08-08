@@ -26,8 +26,10 @@ VAR
 	m_SequenceNumber		:INT;
 	m_SequenceNumberOld		:INT;
 	m_SequenceLast			:INT;
+
+	m_FlStop				:BOOL;
 	
-	m_SequenceState			:EN_SequenceState;
+	m_SequenceState			:INT;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -115,11 +117,16 @@ m_SequenceNumber:=m_SequenceNumber + 1;
     </Method>
     <Method Name="Stop" Id="{a10fd32a-4abb-4a63-8bc1-0b61b8eea675}">
       <Declaration><![CDATA[METHOD PUBLIC Stop : BOOL
-VAR_INPUT
-END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[IF InStop AND NOT m_FlStop AND m_SequenceState=SequenceStateActive THEN
+	m_FlStop				:=TRUE;
+END_IF
+
+IF NOT InStop AND m_FlStop THEN
+	m_FlStop				:=FALSE;
+END_IF
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="SetSequence" Id="{acb2bc80-1a83-4e5d-9880-06eb89e16675}">

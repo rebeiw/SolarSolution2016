@@ -6,7 +6,8 @@
 	SequenceStartNamesStart:=10,
 	SequenceStartNamesWait:=100,
 	SequenceStartNamesDone:=200,
-	SequenceStartNamesInit:=300
+	SequenceStartNamesInit:=300,
+	SequenceStartNamesStop:=400
 );
 END_TYPE
 ]]></Declaration>

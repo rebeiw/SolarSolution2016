@@ -2,7 +2,9 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.0.36">
   <GVL Name="GVL_Soldering" Id="{c344cd74-9d73-4cdc-8729-dddef89ca58f}">
     <Declaration><![CDATA[VAR_GLOBAL
-	SolderingStart:BOOL;
+	SolderingStart			:BOOL;
+	SolderingStop			:BOOL;
+	SolderingContinue		:BOOL;
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>
