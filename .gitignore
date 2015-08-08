@@ -2,3 +2,8 @@
 *.bak
 *.suo
 *.tmc
+*.tpy
+_Boot/
+_Config/
+_CompileInfo/
+_Libraries/
