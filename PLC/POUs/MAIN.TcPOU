@@ -5,11 +5,27 @@
 VAR
 	i :INT;
 	m_Fbi_Soldering:FB_Soldering;
+	m_Fbi_OffLoad:FB_OffLoad;
+	m_Fbi_OffLoad2:FB_OffLoad2;
+	
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[m_Fbi_Soldering.InStart:=SolderingStart;	
-m_fbi_Soldering();]]></ST>
+      <ST><![CDATA[m_Fbi_Soldering.InInit			:=FirstCycle;
+m_fbi_Soldering(InStart			:=SolderingStart,
+				OutSequenceDone	=>OffloadStart);
+
+
+m_Fbi_OffLoad.InInit		:=FirstCycle;
+m_Fbi_OffLoad2.InInit		:=FirstCycle;
+
+m_Fbi_OffLoad(InStart		:=m_fbi_Soldering.OutSequenceDone);
+m_Fbi_OffLoad2(InStart		:=m_Fbi_OffLoad.OutSequenceDone);
+
+FirstCycle:=FALSE;
+
+SolderingStart:=FALSE;
+]]></ST>
     </Implementation>
   </POU>
 </TcPlcObject>

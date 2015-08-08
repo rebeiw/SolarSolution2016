@@ -2,14 +2,18 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.0.36">
   <POU Name="FB_Sequence" Id="{fb4892fb-69c3-469d-b6eb-dfd06ca281dc}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_Sequence
+VAR_IN_OUT
+	InStart						:BOOL;
+END_VAR
 VAR_INPUT
 	InInit						:BOOL;
-	InStart						:BOOL;
 END_VAR
 VAR_OUTPUT
 	OutSequenceActive			:BOOL;
 	OutSequenceWaiting			:BOOL;
 	OutSequenceInit				:BOOL;
+	OutSequenceDone				:BOOL;
+
 	OutSequenceState			:EN_SequenceState;
 END_VAR
 VAR
@@ -44,8 +48,12 @@ END_VAR
       <Implementation>
         <ST><![CDATA[IF InInit THEN
 	m_SequenceNumber		:=SequenceStartNamesInit;
+	m_SequenceLast			:=m_SequenceNumber;
+	m_SequenceNumberOld		:=m_SequenceNumber;
+	m_FlStart				:=FALSE;
 	m_DelayStart			:=FALSE;
 	m_SequenceState			:=SequenceStateInit;
+	InStart					:=FALSE;
 END_IF
 ]]></ST>
       </Implementation>
@@ -55,7 +63,9 @@ END_IF
 
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[Start();
+        <ST><![CDATA[Init();
+Start();
+
 IF m_SequenceNumberOld<>m_SequenceNumber THEN
 	m_SequenceNumberOld		:=m_SequenceNumber;
 	m_DelayStart			:=FALSE;
@@ -66,17 +76,26 @@ m_Delay();
 
 
 IF 		m_SequenceState=SequenceStartNamesWait THEN
-	m_SequenceState			:=SequenceStartNamesWait;
 	OutSequenceActive		:=FALSE;
 	OutSequenceInit			:=FALSE;
 	OutSequenceWaiting		:=TRUE;
+	OutSequenceDone			:=TRUE;
 	
 ELSIF 	m_SequenceState=SequenceStateInit THEN
-	m_SequenceState			:=SequenceStartNamesInit;
 	OutSequenceActive		:=FALSE;
 	OutSequenceInit			:=TRUE;
 	OutSequenceWaiting		:=FALSE;
+	OutSequenceDone			:=FALSE;
 	
+ELSIF 	m_SequenceState=SequenceStateActive THEN
+	OutSequenceActive		:=TRUE;
+	OutSequenceInit			:=FALSE;
+	OutSequenceWaiting		:=FALSE;
+	OutSequenceDone			:=FALSE;
+ELSIF 	m_SequenceState=SequenceStateDone THEN
+	OutSequenceDone			:=TRUE;
+	SetSequence(SequenceStartNamesWait);
+
 END_IF
 
 OutSequenceState			:=m_SequenceState;]]></ST>
@@ -118,6 +137,14 @@ END_IF
 IF NOT InStart AND m_FlStart THEN
 	m_FlStart				:=FALSE;
 END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Done" Id="{f368e173-26f2-4206-b4e5-caf5613282c6}">
+      <Declaration><![CDATA[METHOD PUBLIC Done : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[m_SequenceState:=SequenceStateDone;
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="StartDelaySetTime" Id="{ffd7f3cc-94a3-4c85-8d29-f6a91c8a91dc}">

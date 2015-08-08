@@ -5,7 +5,8 @@
 (
 	SequenceStartNamesStart:=10,
 	SequenceStartNamesWait:=100,
-	SequenceStartNamesInit:=200
+	SequenceStartNamesDone:=200,
+	SequenceStartNamesInit:=300
 );
 END_TYPE
 ]]></Declaration>

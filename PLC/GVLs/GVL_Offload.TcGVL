@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.0.36">
-  <GVL Name="GVL_Main" Id="{d8992863-d5dc-4a74-9d03-791e5077aabe}">
+  <GVL Name="GVL_Offload" Id="{7c24a32e-32c9-45cc-ad89-55ee864705ee}">
     <Declaration><![CDATA[VAR_GLOBAL
-	FirstCycle				:bool:=TRUE;
+	OffloadStart:BOOL;
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>

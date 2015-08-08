@@ -9,6 +9,7 @@
 	SequenceStateHalt,
 	SequenceStateStop,
 	SequenceStateInit,
+	SequenceStateDone,
 	SequenceStateStep
 );
 END_TYPE

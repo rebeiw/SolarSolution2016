@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.0.36">
-  <POU Name="FB_Soldering" Id="{7c5b309b-ddd2-4dc2-9501-bbf31ea7886e}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK PUBLIC FB_Soldering EXTENDS FB_Sequence
+  <POU Name="FB_OffLoad" Id="{b5394b95-e97a-4120-b08f-e7ce8083003a}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_OffLoad EXTENDS FB_Sequence
 VAR_INPUT
 END_VAR
 VAR_OUTPUT
@@ -11,6 +11,7 @@ END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[SUPER^.Main();
+
 CASE m_SequenceNumber OF
 	SequenceStartNamesStart:
 		StartDelaySetTime(T#1S);
