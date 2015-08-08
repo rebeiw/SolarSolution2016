@@ -3,27 +3,26 @@
   <POU Name="MAIN" Id="{fee2d26b-a3db-42c5-95e3-eb371e6dea0b}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
-	i :INT;
-	m_Fbi_Soldering:FB_Soldering;
-	m_Fbi_OffLoad:FB_OffLoad;
-	m_Fbi_OffLoad2:FB_OffLoad2;
+	i 							:INT;
+	m_Fbi_Soldering				:FB_Soldering;
+	m_Fbi_OffLoad				:FB_OffLoad;
+	m_Fbi_OffLoad2				:FB_OffLoad2;
 	
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[m_Fbi_Soldering.InInit			:=FirstCycle;
-m_fbi_Soldering(InStart			:=SolderingStart,
-				OutSequenceDone	=>OffloadStart);
+m_Fbi_OffLoad.InInit			:=SolderingStart OR FirstCycle;
+m_Fbi_OffLoad2.InInit			:=SolderingStart OR FirstCycle;
 
 
-m_Fbi_OffLoad.InInit		:=FirstCycle;
-m_Fbi_OffLoad2.InInit		:=FirstCycle;
+m_fbi_Soldering	(InStart		:=SolderingStart);
+m_Fbi_OffLoad	(InStart		:=m_fbi_Soldering.OutSequenceDone);
+m_Fbi_OffLoad2	(InStart		:=m_Fbi_OffLoad.OutSequenceDone);
 
-m_Fbi_OffLoad(InStart		:=m_fbi_Soldering.OutSequenceDone);
-m_Fbi_OffLoad2(InStart		:=m_Fbi_OffLoad.OutSequenceDone);
+
 
 FirstCycle:=FALSE;
-
 SolderingStart:=FALSE;
 ]]></ST>
     </Implementation>

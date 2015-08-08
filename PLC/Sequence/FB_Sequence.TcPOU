@@ -3,16 +3,18 @@
   <POU Name="FB_Sequence" Id="{fb4892fb-69c3-469d-b6eb-dfd06ca281dc}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_Sequence
 VAR_IN_OUT
-	InStart						:BOOL;
 END_VAR
 VAR_INPUT
 	InInit						:BOOL;
+	InStart						:BOOL;
+	InStop						:BOOL;
 END_VAR
 VAR_OUTPUT
 	OutSequenceActive			:BOOL;
 	OutSequenceWaiting			:BOOL;
 	OutSequenceInit				:BOOL;
 	OutSequenceDone				:BOOL;
+	OutSequenceStop				:BOOL;
 
 	OutSequenceState			:EN_SequenceState;
 END_VAR
@@ -65,6 +67,7 @@ END_IF
       <Implementation>
         <ST><![CDATA[Init();
 Start();
+Stop();
 
 IF m_SequenceNumberOld<>m_SequenceNumber THEN
 	m_SequenceNumberOld		:=m_SequenceNumber;
@@ -110,6 +113,15 @@ m_SequenceNumber:=m_SequenceNumber + 1;
 ]]></ST>
       </Implementation>
     </Method>
+    <Method Name="Stop" Id="{a10fd32a-4abb-4a63-8bc1-0b61b8eea675}">
+      <Declaration><![CDATA[METHOD PUBLIC Stop : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="SetSequence" Id="{acb2bc80-1a83-4e5d-9880-06eb89e16675}">
       <Declaration><![CDATA[METHOD PUBLIC SetSequence : BOOL
 VAR_INPUT
@@ -128,7 +140,7 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF InStart AND NOT m_FlStart THEN
+        <ST><![CDATA[IF InStart AND NOT m_FlStart AND m_SequenceState<>SequenceStateActive THEN
 	m_FlStart				:=TRUE;
 	m_SequenceNumber		:=SequenceStartNamesStart;
 	m_DelayStart			:=FALSE;
