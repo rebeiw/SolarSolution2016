@@ -9,14 +9,26 @@ VAR_OUTPUT
 	OutSequnceState			:EN_SequenceState;
 END_VAR
 VAR
-	m_FlStart:BOOL;
-	m_SequenceNumber:INT;
-	m_SequenceNumberOld:INT;
+	m_DelayStart			:BOOL;
+	m_Delay					:TON;
+	m_DelayTime				:TIME;
+	m_FlStart				:BOOL;
+	m_SequenceNumber		:INT;
+	m_SequenceNumberOld		:INT;
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
+    <Method Name="StartDelay" Id="{15a6796d-77ee-4bda-b88c-7dff68ebe419}">
+      <Declaration><![CDATA[METHOD PUBLIC StartDelay : BOOL
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[m_DelayStart:=TRUE;
+]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="Main" Id="{562a737a-3059-4135-9ef3-716b7ab20daf}">
       <Declaration><![CDATA[METHOD PROTECTED Main : BOOL
 VAR_INPUT
@@ -24,6 +36,32 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[Start();
+IF m_SequenceNumberOld<>m_SequenceNumber THEN
+	m_SequenceNumberOld		:=m_SequenceNumber;
+	m_DelayStart			:=FALSE;
+END_IF
+m_Delay.PT					:=m_DelayTime;
+m_Delay.IN					:=m_DelayStart;
+m_Delay();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="IncSequence" Id="{8ed6c8f7-9634-42ac-a8e9-da5f2719f86b}">
+      <Declaration><![CDATA[METHOD PUBLIC IncSequence : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[m_SequenceNumber:=m_SequenceNumber + 1;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetSequence" Id="{acb2bc80-1a83-4e5d-9880-06eb89e16675}">
+      <Declaration><![CDATA[METHOD PUBLIC SetSequence : BOOL
+VAR_INPUT
+	InSequence:INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[m_SequenceNumber:=InSequence;
 ]]></ST>
       </Implementation>
     </Method>
@@ -34,12 +72,25 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF InStart AND NOT m_FlStart THEN
-	m_FlStart:=TRUE;
-	m_SequenceNumber:=SequenceStartNamesStart;
+	m_FlStart				:=TRUE;
+	m_SequenceNumber		:=SequenceStartNamesStart;
+	m_DelayStart			:=FALSE;
 END_IF
 IF NOT InStart AND m_FlStart THEN
-	m_FlStart:=FALSE;
+	m_FlStart				:=FALSE;
 END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="StartDelaySetTime" Id="{ffd7f3cc-94a3-4c85-8d29-f6a91c8a91dc}">
+      <Declaration><![CDATA[METHOD PUBLIC StartDelaySetTime : BOOL
+VAR_INPUT
+	Delay:TIME;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[m_DelayTime:=Delay;
+StartDelay();
+]]></ST>
       </Implementation>
     </Method>
   </POU>

@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.0.36">
+  <DUT Name="EN_SolderingSequence" Id="{c1ec48c7-a3a8-4665-99ff-6616d5fb849b}">
+    <Declaration><![CDATA[TYPE EN_SolderingSequence :
+(
+	SolderingSequenceStep11 := 11,
+	SolderingSequenceStep12,
+	SolderingSequenceStep13,
+	SolderingSequenceStep14,
+	SolderingSequenceStep15,
+	SolderingSequenceStep16,
+	SolderingSequenceStep17,
+	SolderingSequenceStep18,
+	SolderingSequenceStep19,
+	SolderingSequenceStep20
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>
