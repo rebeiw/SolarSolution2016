@@ -9,10 +9,30 @@ VAR_OUTPUT
 	OutSequnceState			:EN_SequenceState;
 END_VAR
 VAR
+	m_FlStart:BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
+    <Method Name="Main" Id="{562a737a-3059-4135-9ef3-716b7ab20daf}">
+      <Declaration><![CDATA[METHOD PROTECTED Main : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[Start();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Start" Id="{bc076645-3de2-476f-9d12-986e34f26bd8}">
+      <Declaration><![CDATA[METHOD PRIVATE Start : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
   </POU>
 </TcPlcObject>
