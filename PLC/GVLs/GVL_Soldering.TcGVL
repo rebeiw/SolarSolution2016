@@ -4,7 +4,8 @@
     <Declaration><![CDATA[VAR_GLOBAL
 	SolderingStart			:BOOL;
 	SolderingStop			:BOOL;
-	SolderingCont		:BOOL;
+	SolderingCont			:BOOL;
+	SolderingMode			:EN_SequenceMode:=SequenceModeNormal;
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>

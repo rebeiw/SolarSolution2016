@@ -25,7 +25,8 @@ LiveBit			(	InTrigger	:=Clock_1_Hz.OutClock);
 
 m_fbi_Soldering	(	InStart		:=SolderingStart,
 					Instop		:=SolderingStop,
-					InCont		:=SolderingCont);
+					InCont		:=SolderingCont,
+					InMode		:=SolderingMode);
 m_Fbi_OffLoad	(	InStart		:=m_fbi_Soldering.OutSequenceDone);
 m_Fbi_OffLoad2	(	InStart		:=m_Fbi_OffLoad.OutSequenceDone);
 

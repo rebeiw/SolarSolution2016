@@ -9,6 +9,7 @@ VAR_INPUT
 	InStart						:BOOL;
 	InStop						:BOOL;
 	InCont						:BOOL;
+	InMode						:EN_SequenceMode;
 END_VAR
 VAR_OUTPUT
 	OutSequenceActive			:BOOL;
@@ -33,6 +34,7 @@ VAR
 	m_SequenceLast				:INT;
 	
 	m_IgnoreStopActive			:BOOL;
+	m_StepActive				:BOOL;
 
 	m_SequenceState				:INT;
 END_VAR
@@ -57,10 +59,14 @@ END_VAR
 	m_SequenceNumber		:=SequenceStartNamesInit;
 	m_SequenceLast			:=m_SequenceNumber;
 	m_SequenceNumberOld		:=m_SequenceNumber;
+	
 	m_FlStart				:=FALSE;
+	m_FlCont				:=FALSE;
+	m_FlStop				:=FALSE;
+	
 	m_DelayStart			:=FALSE;
 	m_SequenceState			:=SequenceStateInit;
-	InStart					:=FALSE;
+
 END_IF
 ]]></ST>
       </Implementation>
@@ -76,6 +82,7 @@ Cont();
 IF m_SequenceNumberOld<>m_SequenceNumber THEN
 	m_SequenceNumberOld		:=m_SequenceNumber;
 	m_DelayStart			:=FALSE;
+	m_StepActive			:=TRUE;
 END_IF
 m_Delay.PT					:=m_DelayTime;
 m_Delay.IN					:=m_DelayStart;
@@ -147,18 +154,26 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[m_SequenceLast:=m_SequenceNumber;
-m_SequenceNumber:=InSequence;
-m_IgnoreStopActive:=TRUE;]]></ST>
+        <ST><![CDATA[IF InMode=SequenceModeNormal OR (InMode=SequenceModeStep AND InCont)  THEN
+	m_SequenceLast			:=m_SequenceNumber;
+	m_SequenceNumber		:=InSequence;
+	m_IgnoreStopActive		:=TRUE;
+END_IF
+
+IF InMode=SequenceModeStep THEN
+	m_StepActive:=FALSE;
+END_IF
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="IncSequence" Id="{8ed6c8f7-9634-42ac-a8e9-da5f2719f86b}">
       <Declaration><![CDATA[METHOD PUBLIC IncSequence : BOOL
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF m_SequenceState<>SequenceStateStop THEN
+        <ST><![CDATA[IF m_SequenceState<>SequenceStateStop AND InMode=SequenceModeNormal THEN
 	m_SequenceLast:=m_SequenceNumber;
 	m_SequenceNumber:=m_SequenceNumber + 1;
+	m_StepActive			:=FALSE;
 END_IF
 m_IgnoreStopActive:=FALSE;]]></ST>
       </Implementation>
@@ -185,9 +200,14 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF m_SequenceState<>SequenceStateStop THEN
+        <ST><![CDATA[IF 	(m_SequenceState<>SequenceStateStop AND InMode=SequenceModeNormal) OR 
+	(InCont AND InMode=SequenceModeStep) OR 
+	(InSequence=SequenceStartNamesWait)THEN
 	m_SequenceLast		:=m_SequenceNumber;
 	m_SequenceNumber	:=InSequence;
+END_IF
+IF InMode=SequenceModeStep THEN
+	m_StepActive			:=FALSE;
 END_IF
 m_IgnoreStopActive		:=FALSE;]]></ST>
       </Implementation>
@@ -211,7 +231,9 @@ END_IF]]></ST>
       <Declaration><![CDATA[METHOD PUBLIC Done : BOOL
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[m_SequenceState:=SequenceStateDone;
+        <ST><![CDATA[m_SequenceState	:=SequenceStateDone;
+m_StepActive	:=FALSE;
+
 ]]></ST>
       </Implementation>
     </Method>

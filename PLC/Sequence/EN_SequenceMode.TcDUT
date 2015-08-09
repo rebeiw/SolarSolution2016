@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.0.36">
+  <DUT Name="EN_SequenceMode" Id="{eceb5ad1-87f6-464a-bdaf-0cd532b18bd0}">
+    <Declaration><![CDATA[TYPE EN_SequenceMode :
+(
+	SequenceModeNormal := 0,
+	SequenceModeStep,
+	SequenceModeBreak
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>
