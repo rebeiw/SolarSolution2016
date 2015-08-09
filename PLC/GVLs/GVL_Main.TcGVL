@@ -2,7 +2,9 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.0.36">
   <GVL Name="GVL_Main" Id="{d8992863-d5dc-4a74-9d03-791e5077aabe}">
     <Declaration><![CDATA[VAR_GLOBAL
-	FirstCycle				:bool:=TRUE;
+	FirstCycle				:BOOL:=TRUE;
+	Clock_1_Hz				:FB_Clock;
+	LiveBit					:FB_LiveBit;
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>

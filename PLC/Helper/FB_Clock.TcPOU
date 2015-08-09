@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.0.36">
+  <POU Name="FB_Clock" Id="{be91384b-b8a3-4163-b3ab-b907ed991a10}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK PUBLIC FB_Clock
+VAR_INPUT
+	InInit:BOOL;
+	InStart:BOOL;
+	InStop:BOOL;
+END_VAR
+VAR_OUTPUT
+	OutClock:BOOL;
+END_VAR
+VAR
+	ImpulsHigh:TP;
+	ImpulsLow:TP;
+	m_Start:BOOL;
+	m_Stop:BOOL;
+	FlNeg1:F_TRIG;
+	FlNeg2:F_TRIG;
+	FlPos:R_TRIG;
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[FlPos		(CLK:=InInit OR InStart OR FlNeg2.Q);
+
+ImpulsHigh	(IN:=FlPos.Q,PT:=T#1S);
+
+FlNeg1		(CLK:=ImpulsHigh.Q);
+
+ImpulsLow	(IN:=FlNeg1.Q,PT:=T#1S);
+
+FlNeg2		(CLK:=ImpulsLow.Q);
+
+OutClock:=ImpulsHigh.Q;]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

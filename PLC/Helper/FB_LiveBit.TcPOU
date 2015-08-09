@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.0.36">
+  <POU Name="FB_LiveBit" Id="{37a0ca57-803f-4843-920a-c0fab2481626}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK PUBLIC FB_LiveBit
+VAR_INPUT
+	InTrigger:BOOL;
+END_VAR
+VAR_OUTPUT
+	OutReTrigger:BOOL;
+END_VAR
+VAR
+	m_Tof			:TOF;
+	m_PosFlk		:R_TRIG;
+	m_NegFlk		:F_TRIG;
+	m_Toogle		:BOOL;
+	
+	m_Counter:INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[m_PosFlk(CLK:=InTrigger);
+m_NegFlk(CLK:=InTrigger);
+
+m_Tof(IN:=m_PosFlk.Q OR m_NegFlk.Q,PT:=T#2S);
+IF NOT m_Tof.Q THEN
+	m_Toogle:=NOT m_Toogle;
+ELSE
+	m_Toogle:=FALSE;
+END_IF
+
+]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

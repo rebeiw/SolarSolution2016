@@ -7,6 +7,8 @@ VAR
 	m_Fbi_Soldering				:FB_Soldering;
 	m_Fbi_OffLoad				:FB_OffLoad;
 	m_Fbi_OffLoad2				:FB_OffLoad2;
+	m_Clock:BOOL;
+	
 	
 END_VAR
 ]]></Declaration>
@@ -15,6 +17,11 @@ END_VAR
 m_Fbi_OffLoad.InInit			:=SolderingStart OR FirstCycle;
 m_Fbi_OffLoad2.InInit			:=SolderingStart OR FirstCycle;
 
+Clock_1_Hz.InInit				:=FirstCycle OR LiveBit.OutReTrigger;
+
+Clock_1_Hz();
+
+LiveBit			(	InTrigger	:=Clock_1_Hz.OutClock);
 
 m_fbi_Soldering	(	InStart		:=SolderingStart,
 					Instop		:=SolderingStop,

@@ -20,18 +20,21 @@ VAR_OUTPUT
 	OutSequenceState			:EN_SequenceState;
 END_VAR
 VAR
-	m_DelayStart			:BOOL;
-	m_Delay					:TON;
-	m_DelayTime				:TIME;
-	m_FlStart				:BOOL;
-	m_SequenceNumber		:INT;
-	m_SequenceNumberOld		:INT;
-	m_SequenceLast			:INT;
+	m_FlStart					:BOOL;
+	m_FlStop					:BOOL;
+	m_FlCont					:BOOL;
 
-	m_FlStop				:BOOL;
-	m_FlCont				:BOOL;
+	m_Delay						:TON;
+	m_DelayTime					:TIME;
+	m_DelayStart				:BOOL;
+
+	m_SequenceNumber			:INT;
+	m_SequenceNumberOld			:INT;
+	m_SequenceLast				:INT;
 	
-	m_SequenceState			:INT;
+	m_IgnoreStopActive			:BOOL;
+
+	m_SequenceState				:INT;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -79,25 +82,41 @@ m_Delay.IN					:=m_DelayStart;
 m_Delay();
 
 
-IF 		m_SequenceState=SequenceStartNamesWait THEN
+IF 		m_SequenceState=SequenceStateWaiting THEN
 	OutSequenceActive		:=FALSE;
 	OutSequenceInit			:=FALSE;
 	OutSequenceWaiting		:=TRUE;
 	OutSequenceDone			:=TRUE;
+	OutSequenceStop			:=FALSE;
 	
 ELSIF 	m_SequenceState=SequenceStateInit THEN
 	OutSequenceActive		:=FALSE;
 	OutSequenceInit			:=TRUE;
 	OutSequenceWaiting		:=FALSE;
 	OutSequenceDone			:=FALSE;
+	OutSequenceStop			:=FALSE;
 	
 ELSIF 	m_SequenceState=SequenceStateActive THEN
 	OutSequenceActive		:=TRUE;
 	OutSequenceInit			:=FALSE;
 	OutSequenceWaiting		:=FALSE;
 	OutSequenceDone			:=FALSE;
+	OutSequenceStop			:=FALSE;
+
+ELSIF 	m_SequenceState=SequenceStateStop THEN
+	OutSequenceActive		:=TRUE;
+	OutSequenceInit			:=FALSE;
+	OutSequenceWaiting		:=FALSE;
+	OutSequenceDone			:=FALSE;
+	IF m_IgnoreStopActive THEN
+		OutSequenceStop			:=Clock_1_Hz.OutClock;
+	ELSE
+		OutSequenceStop			:=TRUE;
+	END_IF
+
 ELSIF 	m_SequenceState=SequenceStateDone THEN
 	OutSequenceDone			:=TRUE;
+	m_SequenceState			:=SequenceStateWaiting;
 	SetSequence(SequenceStartNamesWait);
 
 END_IF
@@ -121,6 +140,18 @@ END_IF
 ]]></ST>
       </Implementation>
     </Method>
+    <Method Name="SetSequenceIgnoreStop" Id="{722b3ae9-77af-490b-9a9c-57680e40316f}">
+      <Declaration><![CDATA[METHOD PUBLIC SetSequenceIgnoreStop : BOOL
+VAR_INPUT
+	InSequence:INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[m_SequenceLast:=m_SequenceNumber;
+m_SequenceNumber:=InSequence;
+m_IgnoreStopActive:=TRUE;]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="IncSequence" Id="{8ed6c8f7-9634-42ac-a8e9-da5f2719f86b}">
       <Declaration><![CDATA[METHOD PUBLIC IncSequence : BOOL
 ]]></Declaration>
@@ -129,7 +160,7 @@ END_IF
 	m_SequenceLast:=m_SequenceNumber;
 	m_SequenceNumber:=m_SequenceNumber + 1;
 END_IF
-]]></ST>
+m_IgnoreStopActive:=FALSE;]]></ST>
       </Implementation>
     </Method>
     <Method Name="Stop" Id="{a10fd32a-4abb-4a63-8bc1-0b61b8eea675}">
@@ -155,9 +186,10 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF m_SequenceState<>SequenceStateStop THEN
-	m_SequenceLast:=m_SequenceNumber;
-	m_SequenceNumber:=InSequence;
-END_IF]]></ST>
+	m_SequenceLast		:=m_SequenceNumber;
+	m_SequenceNumber	:=InSequence;
+END_IF
+m_IgnoreStopActive		:=FALSE;]]></ST>
       </Implementation>
     </Method>
     <Method Name="Start" Id="{bc076645-3de2-476f-9d12-986e34f26bd8}">
